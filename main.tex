@@ -1,0 +1,70 @@
+\documentclass[12pt, a4paper]{report}
+
+\usepackage{graphicx}
+\usepackage[left=1.5cm, right=1.5cm, top=2cm, bottom=2cm]{geometry}
+\usepackage[
+    pdfauthor={Shamba Chowdhury, Ankana Ghosh, Shreyashi Ghosh},
+    pdftitle={SAR Image Colorisation}
+]{hyperref}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{color}
+
+% Listings light theme colors and config
+\definecolor{listbg}{RGB}{248,248,248}
+\definecolor{listtext}{RGB}{30,30,30}
+\definecolor{listcomment}{RGB}{0,128,0}
+\definecolor{listkeyword}{RGB}{0,102,204}
+\definecolor{liststring}{RGB}{163,21,21}
+\definecolor{listnumber}{RGB}{128,0,128}
+
+\lstset{
+    backgroundcolor=\color{listbg},
+    basicstyle=\ttfamily\small\color{listtext},
+    keywordstyle=\color{listkeyword}\bfseries,
+    commentstyle=\color{listcomment}\itshape,
+    stringstyle=\color{liststring},
+    numberstyle=\color{listnumber},
+    numbers=left,
+    numbersep=8pt,
+    tabsize=4,
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    rulecolor=\color{listbg},
+    captionpos=b
+}
+
+\graphicspath{{images/}}
+
+\begin{document}
+
+\include{chapters/title}
+\include{chapters/abstract}
+\include{chapters/certificate}
+\include{chapters/acknowledgement}
+
+\tableofcontents
+
+\chapter{Introduction}
+\input{chapters/introduction.tex}
+
+\chapter{Sentinel Mission}
+\input{chapters/sentinel_mission.tex}
+
+\chapter{Dataset}
+\input{chapters/dataset.tex}
+
+\chapter{Modelling}
+\input{chapters/modelling.tex}
+
+\chapter{Results}
+\input{chapters/results.tex}
+
+\chapter{Summary and Conclusion}
+\input{chapters/summary.tex}
+
+\bibliographystyle{unsrt}
+\bibliography{references}
+
+\end{document}
