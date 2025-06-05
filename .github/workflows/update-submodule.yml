@@ -1,0 +1,43 @@
+name: Update Submodule in Parent Repo
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    update-main-repo:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout submodule repo
+              uses: actions/checkout@v4
+
+            - name: Set up git user
+              run: |
+                git config --global user.name 'github-actions[bot]'
+                git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+            - name: Clone main repository
+              env:
+                MAIN_REPO: https://github.com/ShambaC/SAR-Image-Colorisation.git
+              run: |
+                git clone $MAIN_REPO main-repo
+                cd main-repo
+                git submodule update --init --recursive
+
+            - name: Update submodule reference
+              env:
+                SUBMODULE_PATH: Paper
+              run: |
+                cd main-repo
+                git submodule update --remote $SUBMODULE_PATH
+                git add $SUBMODULE_PATH
+            
+            - name: Commit and push changes
+              env:
+                GH_TOKEN: ${{ secrets.MAIN_REPO_PUSH_TOKEN }}
+              run: |
+                cd main-repo
+                git commit -m "chore: Update submodule to latest commit" || echo "No chnages to commit"
+                git push https://x-access-token:${GH_TOKEN}@github.com/ShambaC/SAR-Image-Colorisation.git HEAD:main
