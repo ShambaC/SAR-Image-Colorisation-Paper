@@ -10,27 +10,27 @@ There are several image colorization machine learning models available, e.g. -
 
 But to select the most appropriate image colorization model for our SAR image colorization, we need to look at the features, pros and cons of the available models and decide which model's features aligns with our goals the best.
 
-\subsection{GAN}
+\section*{GAN}
 GANs (Generative Adversarial Network) are a class of neural networks that autonomously learn patterns in the input data to generate new samples resembling the original dataset.
 GAN's architecture consists of two neural networks:\par
     \textbf{\textit{Generator} -} Creates synthetic data from random noise to produce data so realistic that the discriminator cannot distinguish it from real data.\par
     \textbf{\textit{discriminator} -} Acts as a critic, evaluating whether the data it receives is real or fake.
 
-\subsection{CGAN}
+\section*{CGAN}
 A Conditional Generative Adversarial Network (CGAN) is an advanced type of GAN (Generative Adversarial Network) where output generation is controlled using a condition.\par
 For example, if you want to generate only Mercedes cars from a dataset of various cars, CGANs allow you to specify "Mercedes" as a condition.
 
-\subsection{DCGAN}
+\section*{DCGAN}
 DCGAN, ot Deep Convolutional Generative Adversarial Network uses a generator composed of a series of transpose convolution operations. These operations take in a random noise vector, z, and transform it by progressively increasing its spatial dimensions while decreasing its feature volume depth. The discriminator is basically a convolutional neural network which classifies an image as real or fake.
 
-\subsection{Pix2Pix GAN}
+\section*{Pix2Pix GAN}
 It uses CGAN model and U-net architecture to perform image-to-image translations. But we can only provide images as input, no text can be provided as input prompt.
 
-\subsection{CycleGAN}
+\section*{CycleGAN}
 In CycleGAN, we treat the problem as an image reconstruction problem. We first take an image input (x) and use the generator G to convert it into the transformed image. Then we reverse this process from transformed image to original image using a generator F. Then we calculate the mean squared error loss between real and reconstructed image.\par
 The most important feature of this cycle GAN is that it can do this image translation on an unpaired image where there is no relation exists between the input image and output image.
 
-\subsection{Latent Diffusion Model}
+\section*{Latent Diffusion Model}
 The key innovation of latent diffusion models is that they apply this diffusion process not to the raw pixel values of an image but instead to an encoded latent representation of the image.
 How it Works:
 \begin{itemize}
