@@ -1,9 +1,51 @@
-Sentinel mission introduction
+The Sentinel missions are a series of Earth observation satellites developed by the European Space Agency (ESA) under the Copernicus programme, a joint initiative with the European Commission aimed at ensuring autonomous, timely, and high-quality information for environmental and security-related services. The programme was established to fill critical gaps in global monitoring by providing consistent and long-term satellite data to support operational services, scientific research, and policy-making. Sentinel satellites are designed with a strong emphasis on reliability, revisit frequency, data continuity, and open-access distribution. Each mission is tailored to address specific observational needs across land, ocean, and atmosphere, enabling applications ranging from emergency response and climate monitoring to agricultural management and urban planning. The following sections detail two key components of this initiative: the radar-based Sentinel-1 mission and the high-resolution optical Sentinel-2 mission.
+
 
 \section{Sentinel 1}
 
-Sen 1 Content
+The Sentinel-1 mission is one of the flagship components of the European Union’s Copernicus programme, designed to provide continuous, reliable, and freely available radar observations for operational services and scientific research. Developed and operated by the European Space Agency (ESA), Sentinel-1 is composed of a constellation of two satellites—Sentinel-1A and Sentinel-1B—equipped with C-band Synthetic Aperture Radar (SAR) instruments for day-and-night, all-weather Earth observation \cite{TORRES20129}.
+
+The mission was conceptualized as the successor to the ERS and Envisat radar satellites. With its dual-satellite configuration in the same sun-synchronous orbit (altitude 693 km), Sentinel-1 achieves a 6-day exact repeat cycle and offers conflict-free operations that support systematic acquisitions. Each satellite has a design lifetime of 7 years, with consumables supporting up to 12 years of service, contributing to a planned 15–20 year mission lifecycle \cite{TORRES20129}.
+
+The C-SAR payload operates in four distinct modes:
+\begin{itemize}
+    \item \textbf{Interferometric Wide-swath (IW)}: the primary mode, using TOPSAR and ScanSAR techniques to provide 250 km swaths with 5 m $\times$ 20 m spatial resolution.
+    \item \textbf{Extra Wide-swath (EW)}: 400 km swaths at 20 m $\times$ 40 m resolution, suited for sea-ice and ocean monitoring.
+    \item \textbf{Strip Map (SM)}: high-resolution (5 m $\times$ 5 m) mode with 80 km swath for targeted monitoring.
+    \item \textbf{Wave Mode (WV)}: collects 20 km $\times$ 20 km ocean vignettes every 100 km to support marine applications.
+\end{itemize}
+
+A key innovation in Sentinel-1 is its use of active phased-array antennas for electronic beam steering, enabling fast transitions between modes and polarizations (HH+HV or VV+VH). The onboard Payload Data Handling Terminal (PDHT) includes 1.4 Tb of solid-state memory, efficient compression, and dual-channel X-band transmission at 260 Mbps each, allowing for near real-time data availability within 3 hours of acquisition in many cases \cite{TORRES20129}.
+
+Applications include interferometric land displacement analysis (e.g., landslides, subsidence), emergency response mapping, ice and ship monitoring, and forest and crop assessment. The mission is also designed for interoperability with other C-band systems such as RADARSAT and COSMO-SkyMed to improve revisit performance and cross-calibration \cite{TORRES20129}.
+
+The Sentinel-1 ground segment ensures systematic Level-0 to Level-2 data processing and distribution. Level-1 products include Single Look Complex (SLC) and Ground Range Detected (GRD) formats, supporting applications from precise deformation studies to broad-scale land use classification. Overall, Sentinel-1 marks a significant leap in radar remote sensing capability, availability, and reliability \cite{TORRES20129}.
+
+\vspace{0.5cm}
 
 \section{Sentinel 2}
 
-Sen 2 Content
+The Sentinel-2 mission, also part of the Copernicus programme, provides high-resolution optical imagery for land surface monitoring. Designed and developed by ESA, Sentinel-2 complements the radar capabilities of Sentinel-1 with a focus on vegetation, soil, water cover, inland and coastal waters, and disaster mapping \cite{DRUSCH201225}. The constellation consists of two identical satellites (Sentinel-2A and 2B) orbiting at 786 km in a sun-synchronous path, phased 180° apart to provide a revisit time of 5 days at the equator.
+
+Each satellite is equipped with a MultiSpectral Instrument (MSI), a pushbroom scanner with 13 spectral bands ranging from visible (VIS) and near-infrared (NIR) to shortwave infrared (SWIR). Spatial resolutions vary by band:
+\begin{itemize}
+    \item \textbf{10 m}: Blue, Green, Red, and NIR (Bands 2–4, 8) for land-cover classification.
+    \item \textbf{20 m}: Red-edge and SWIR (Bands 5–7, 11, 12) for vegetation, moisture, and biomass studies.
+    \item \textbf{60 m}: Bands 1, 9, 10 for atmospheric correction and cirrus/cloud screening.
+\end{itemize}
+
+The MSI employs a Three Mirror Anastigmat (TMA) telescope design with silicon carbide optics for thermal stability. Its 290 km swath, high revisit frequency, and radiometric performance make it suitable for systematic global land monitoring \cite{DRUSCH201225}.
+
+Radiometric calibration is maintained via an onboard diffuser and pre-launch characterization. Wavelet-based lossy compression is applied onboard, achieving a factor of 2–3 without compromising image quality. The system is optimized for high geolocation accuracy (<= 20 m without ground control points, <= 12.5 m with them) and image-to-image coregistration (<= 3 m) to support change detection and time series analysis \cite{DRUSCH201225}.
+
+Operational products include Level-0 (raw), Level-1B (radiometrically calibrated), and Level-1C (orthorectified, top-of-atmosphere reflectance). These support a wide array of applications, such as:
+\begin{itemize}
+    \item Crop and forest monitoring,
+    \item Natural disaster response (e.g., floods, wildfires),
+    \item Urban planning,
+    \item Coastal and inland water monitoring.
+\end{itemize}
+
+The Sentinel-2 ground segment handles automated mission planning, acquisition, processing, calibration, and data dissemination. Integration with services like Geoland2 and G-MOSAIC ensures that Sentinel-2 data directly supports EU environmental and security policies \cite{DRUSCH201225}.
+
+In synergy with Sentinel-1 and historical missions such as Landsat and SPOT, Sentinel-2 facilitates the construction of dense, multi-decadal Earth observation time series for operational and research use. Its role in enhancing spatial, spectral, and temporal resolution marks a transformative step in global land surface monitoring \cite{DRUSCH201225}.
