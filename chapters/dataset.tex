@@ -1,8 +1,31 @@
-Dataset content
+For our task of colorising SAR images we require an extensive dataset of paired Sentinel 1 and Sentinel 2 images. Along with the image pairs, we also require additionally metada for text conditioning during the colorisation process. This chapter delves into the extensive process of metadata choices and image acquisition.
 
 \section{Dataset specification}
 
-Dataset metadata
+One of the most crucial information a dataset provides is the metainformation for the items in it. Therefore, we have decided on a set of information that accompanies every image provided with the dataset.
+
+Each image in the dataset has the following common attributes:
+\begin{itemize}
+    \item \textbf{Coordinates:} Geo-coordinates of the top-left point of the image.
+    \item \textbf{Country:} Name of the country where the image was captured.
+    \item \textbf{Date-Time:} Date and time when the image was captured.
+    \item \textbf{Resolution Scale:} Geospatial resolution of the image.
+    \item \textbf{Temperature Region:} Temperature zone of the region in the image.
+    \item \textbf{Season:} Season in the specific region at the time the image was captured.
+\end{itemize}
+
+Sentinel 1 images have two more attributes to them:
+\begin{itemize}
+    \item \textbf{Operational Mode:} It is the operational/acquisition mode of the satellite it used to capture the given image.
+    \item \textbf{Polarisation:} It is the polarisation with which the image was captured.
+\end{itemize}
+
+Sentinel 2 images have one unique attribute:
+\begin{itemize}
+    \item \textbf{Bands:} Sentinel 2 images come with multiple different information channels called bands, this attribute contains a list of the bands in the image.
+\end{itemize}
+
+These were all the metadata associated with the images in the dataset. This information is later leveraged as additional information for text guidance in the colorisation process.
 
 \section{Image acquisition}
 
