@@ -29,7 +29,7 @@ These were all the metadata associated with the images in the dataset. This info
 
 \section{Image acquisition}
 
-Image downloading stuff
+Now, that the metadata keys have been decided, we need to select appropriate values for them. Once the values are decided, they can be used to acquire images from the ESA's Copernicus API.
 
 \subsection{Satellite operational mode}
 
@@ -41,11 +41,31 @@ VV VH
 
 \subsection{Resolution Scale}
 
-20m ?
+10m
 
 \subsection{Season Classification}
 
-Summer Winter
+Now, it is needed to classify the season for an image depending on its country and the timestamp from when the image was captured. To do so, we will need seasonal duration data for all countries. This information is not always available for all countries. Also, the seasons are not always the same 4 seasons for all countries, especially given current circumstances with global climate. Hence we need to devise a standardised method to classify seasons for various countries into the four major seasons: \textbf{Winter}, \textbf{Spring}, \textbf{Summer}, and \textbf{Fall}.
+
+To perform this task, we devised an algorithm. It goes as follows:
+\begin{enumerate}
+    \item Acquire a list of all countries along with a few cities from each country. This is done by using the Simple Maps World Cities dataset\cite{world_cities}. This dataset contains a list of 248 countries along with a few cities from each country and their coordinates.
+    \item Retrieve historical weather data (daily average temperature) for a span of a year for every city under each country. This data is retrieved from Open-Meteo\cite{Zippenfenig_Open-Meteo} which provides free API access for various categories of weather data.
+    \item Average the temperature across all cities for a country to find the daily average temperature of the country over a year.
+    \item Find maximum temperature and minimum temperature for each country. This information will be used to calculate time periods for the seasons. It is done in the following way:
+    \begin{itemize}
+        \item The maximum temperature is considered the peak of summer and the minimum temperature is considered the trough of winter.
+        \item The temperatures have an accuracy of 9 significant figures after decimal, so chances of collision (ie., two or more peaks or trough) is almost negligible. Yet, to account for collision, we need to check the hemisphere information.
+
+        If the country is in northern hemisphere, Choose the first peak and trough and vice-versa for southern hemisphere. The reasoning behind this is the general opposite climate in both the hemispheres.
+        \item We find the difference between the temperatures, consider it \textit{D}.
+        \item Consider \textit{D/4} temperature difference from maximum temperature the onset and end of summer, the same goes for the \textit{D/4} temperature difference from winter. This temperature is called the \textit{transition point}.
+        \item Traverse through days towards the past from peak temperature to find a day that has the \textit{transition point} temperature. This is end of spring. Traversing towards future from trough will give us the onset of spring. Similarly in the opposite manner we can fine onset and end of fall.
+        \item To find this day, we include a buffer period of 7 days before matching temperature. This is to ensure that a season lasts at least for the duration of a week.
+    \end{itemize}
+    \item Thus we now have seasonal data for every country.
+    \item For contingency, for any country whose data could not be calculated will rely on the classical meteorological season segragation.
+\end{enumerate}
 
 \subsection{Temperature Region Classification}
 
