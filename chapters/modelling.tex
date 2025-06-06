@@ -84,7 +84,38 @@ Variational Auto Encoder
 
 \subsection{CLIP}
 
-Contrastive Language–Image Pre-training
+\subsubsection{What is CLIP?}
+Contrastive Language–Image Pretraining (CLIP) is a neural network model introduced by OpenAI that learns to connect images and text by training on a massive dataset of 400 million (image, text) pairs collected from the internet \cite{radford2021learningtransferablevisualmodels}. Unlike traditional supervised models that rely on task-specific labeled data, CLIP is trained with natural language supervision using a contrastive learning objective. Its dual-encoder structure includes both an image encoder and a text encoder, enabling CLIP to perform zero-shot transfer across a variety of vision tasks.
+
+\subsubsection{Architecture of the Text Encoder}
+The CLIP text encoder is a transformer-based architecture similar in design to GPT-2 \cite{radford2021learningtransferablevisualmodels}. It operates on a byte pair encoded (BPE) tokenized input with positional embeddings and uses masked self-attention. The encoded text is projected into a joint embedding space shared with image embeddings. Specifically, the final layer's output corresponding to the \texttt{[EOS]} token is extracted and linearly projected for contrastive learning alignment.
+
+\subsubsection{Working Mechanism}
+During training, CLIP is optimized to distinguish correct (image, text) pairs from incorrect ones using a symmetric InfoNCE loss. Given a batch of $N$ (image, text) pairs, the model learns embeddings such that the cosine similarity between matched pairs is maximized, and mismatches are minimized. This is done for both directions: image-to-text and text-to-image.
+
+\subsubsection{Features and Capabilities}
+\begin{itemize}
+    \item \textbf{Zero-shot Learning}: CLIP performs tasks without any additional fine-tuning, simply by using textual prompts.
+    \item \textbf{Flexible Prompting}: Users can guide CLIP with different natural language phrases, allowing contextual control over predictions.
+    \item \textbf{Text Encoder for NLP}: Although trained for vision-language tasks, the CLIP text encoder can be repurposed for phrase understanding and even outperforms traditional language models like BERT in certain tasks \cite{yan2022clipunderstandstextprompting}.
+    \item \textbf{Open-vocabulary Classification}: Since labels are given as text, CLIP can recognize classes it has never seen during training.
+\end{itemize}
+
+\subsubsection{Comparison with Other Models}
+Unlike BERT, which uses masked language modeling, or GPT, which uses autoregressive prediction, CLIP uses a contrastive loss across modalities. This enables alignment between vision and language but limits the encoder's performance on typical NLP tasks unless prompted appropriately. Nonetheless, when evaluated on phrase understanding and entity tasks, CLIP often outperforms BERT and other specialized models \cite{yan2022clipunderstandstextprompting}.
+
+\subsubsection{Why Use CLIP?}
+CLIP excels in:
+\begin{itemize}
+    \item \textbf{Cross-modal understanding}, bridging visual and textual inputs.
+    \item \textbf{Zero-shot generalization}, enabling use without task-specific data.
+    \item \textbf{Scalability and flexibility}, through prompt engineering and contrastive training.
+    \item \textbf{Compact design}, with a 38M parameter text encoder that performs competitively against much larger models \cite{yan2022clipunderstandstextprompting}.
+\end{itemize}
+
+In SAR image colorization, where we take black-and-white satellite images as input paired with a label (text prompt) to generate the corresponding colorized image, the ability to robustly understand and align textual descriptions with visual content is crucial. The CLIP text encoder provides an effective solution by mapping input prompts into a shared embedding space with images, enabling models to accurately associate textual labels with visual features. This makes it an excellent choice for text-to-image generation and conditioning tasks, particularly in remote sensing domains where annotation is limited and interpretability is key. With its scalable training strategy, strong generalization, and lightweight architecture, CLIP offers a compelling foundation for multimodal SAR-based applications.
+
+
 
 \subsection{UNET}
 
