@@ -51,6 +51,8 @@ To perform this task, we devised an algorithm. It goes as follows:
 \begin{enumerate}
     \item Acquire a list of all countries along with a few cities from each country. This is done by using the Simple Maps World Cities dataset\cite{world_cities}. This dataset contains a list of 248 countries along with a few cities from each country and their coordinates.
     \item Retrieve historical weather data (daily average temperature) for a span of a year for every city under each country. This data is retrieved from Open-Meteo\cite{Zippenfenig_Open-Meteo} which provides free API access for various categories of weather data.
+
+    Relevant code snippet can be found in Appendix A. Listing \ref{code:season}.
     \item Average the temperature across all cities for a country to find the daily average temperature of the country over a year.
     \item Find maximum temperature and minimum temperature for each country. This information will be used to calculate time periods for the seasons. It is done in the following way:
     \begin{itemize}
