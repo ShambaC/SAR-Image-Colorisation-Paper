@@ -76,7 +76,20 @@ Hence, Latent Diffusion Model is the most suitable and appropriate choice for ou
 
 \section{Components of LDM}
 
-3 parts
+
+The Latent Diffusion Model (LDM) is a type of generative model that operates in a compressed latent space, making it both computationally efficient and capable of producing high-quality outputs. The architecture of an LDM typically integrates the following three major components:
+
+\subsection*{1. Variational Autoencoder (VAE)}
+The VAE is responsible for mapping high-dimensional image data to a lower-dimensional latent space. It consists of an encoder that compresses the input image into a latent representation and a decoder that reconstructs the image from the latent code. By training the VAE to preserve the most important semantic and structural features, the diffusion process can be applied in the latent space instead of the pixel space, significantly reducing computational overhead.
+
+\subsection*{2. Contrastive Language-Image Pretraining (CLIP)}
+CLIP is a vision-language model that learns a shared embedding space for images and text. In the context of LDMs, CLIP can be used for conditional generation by incorporating text-based prompts or semantic guidance during training or inference. This allows the model to generate images that are not only visually plausible but also aligned with high-level descriptions or attributes, which can be extended to the SAR colorisation task in future work.
+
+\subsection*{3. U-Net Architecture}
+The U-Net serves as the core neural network used in the denoising process of the diffusion model. It takes a noisy latent representation as input and predicts the noise to be removed at each diffusion step. The U-Net used in LDMs is often enhanced with attention mechanisms and conditional embeddings (e.g., timestep embeddings, CLIP embeddings) to improve the generative capabilities. Its symmetric encoder-decoder structure with skip connections helps preserve spatial details across the layers.
+
+Together, these components enable the LDM to learn efficient, controllable, and high-fidelity mappings from noisy latent variables to clean, semantically rich images.
+
 
 \subsection{VAE}
 

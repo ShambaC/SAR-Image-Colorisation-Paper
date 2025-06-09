@@ -1,1 +1,13 @@
-Summary and conclusion are here
+\section*{}
+
+This project presents a novel framework for colorising Synthetic Aperture Radar (SAR) imagery by leveraging the strengths of Latent Diffusion Models (LDMs) alongside operational SAR acquisition techniques. Unlike traditional methods that rely on Generative Adversarial Networks (GANs), our approach uses LDMs that operate in a compressed latent space, enabling efficient and high-quality image synthesis. Additionally, the architecture allows for optional text-conditioning, enhancing the flexibility of the colorisation process.
+
+To support the model training, we constructed a custom dataset consisting of co-registered Sentinel-1 and Sentinel-2 image pairs. The Sentinel-1 data was acquired in Interferometric Wide (IW) swath mode using dual polarization (VV and VH), which provides detailed structural information across a variety of terrains and seasons. The corresponding Sentinel-2 optical images serve as ground truth color references, allowing the LDM to learn meaningful mappings from SAR intensity patterns to plausible color representations.
+
+Our experiments demonstrate that LDMs can successfully reconstruct visually coherent and contextually relevant color images from grayscale SAR inputs. These colorised outputs improve the interpretability of SAR data for human observers and create opportunities for integration into downstream computer vision tasks where color information plays a critical role.
+
+In conclusion, this work introduces an effective and scalable alternative to conventional GAN-based SAR colorisation techniques. The use of LDMs opens new possibilities in remote sensing image translation, with promising results in terms of visual fidelity and contextual relevance. Future extensions of this work may include:
+\begin{itemize}
+    \item Incorporating quantitative evaluation metrics for benchmarking performance,
+    \item Developing a complete inference pipeline with pre-trained models for practical deployment.
+\end{itemize}

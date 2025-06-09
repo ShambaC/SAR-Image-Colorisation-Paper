@@ -33,9 +33,9 @@ Now, that the metadata keys have been decided, we need to select appropriate val
 
 \subsection{Satellite operational mode}
 
-Sentinel‑1A and Sentinel‑1B operate using four exclusive acquisition modes: \textbf{Stripmap (SM)}, \textbf{Interferometric Wide Swath (IW)}, \textbf{Extra Wide Swath (EW)}, and \textbf{Wave (WV)}. These modes utilize the satellite’s C-SAR instrument and vary in swath width, resolution, and application.\cite{eos2024sentinel1}
+Sentinel‑1A and Sentinel‑1B operate using four exclusive acquisition modes: \textbf{Stripmap (SM)}, \textbf{Interferometric Wide Swath (IW)}, \textbf{Extra Wide Swath (EW)}, and \textbf{Wave (WV)}. These modes utilize the satellite’s C-SAR instrument and vary in swath width, resolution, and application.\cite{eosda2025sentinel1}
 
-\subsubsection{Stripmap (SM) Mode:}
+\subsubsection{\textbf{1. Stripmap (SM) Mode:}}
 
 SM mode ensures compatibility with earlier missions like ERS and Envisat. It offers high-resolution (5 x 5 m) imaging with a swath width of 80 km. The mode uses six overlapping swaths, each controlled by fixed azimuth and elevation pointing. Users can switch among beams by adjusting incidence angles and elevation beam width.
 
@@ -52,7 +52,7 @@ SM mode ensures compatibility with earlier missions like ERS and Envisat. It off
     \item Not ideal for continuous land monitoring or large-area coverage.
 \end{itemize}
 
-\subsubsection{\textbf{Interferometric Wide Swath (IW) Mode:}}
+\subsubsection{\textbf{2. Interferometric Wide Swath (IW) Mode:}}
 
 IW mode is the primary mode for land observation. It combines a 250 km swath width with (5 x 20 m) resolution and implements the TOPS (Terrain Observation with Progressive Scans) technique, which enhances uniformity across images.
 
@@ -74,7 +74,7 @@ The IW mode also supports burst synchronization for interferometric applications
     \item Requires high co-registration precision for interferometry.
 \end{itemize}
 
-\subsubsection{\textbf{Extra Wide Swath (EW) Mode:} }
+\subsubsection{\textbf{3. Extra Wide Swath (EW) Mode:} }
 
 EW mode employs the same TOPSAR principle as IW but extends the swath to 400 km using five sub-swaths. It provides a coarser resolution of 20 x 40 m and is primarily used over oceans and polar regions where spatial coverage outweighs detail.
 
@@ -90,7 +90,7 @@ EW mode employs the same TOPSAR principle as IW but extends the swath to 400 km 
     \item Low resolution unsuitable for terrestrial or fine-grained applications.
 \end{itemize}
 
-\subsubsection{\textbf{Wave (WV) Mode: }}
+\subsubsection{\textbf{4. Wave (WV) Mode: }}
 
 WV mode offers 20 × 20 km vignettes captured at intervals of 100 km along the satellite's path. It alternates elevation beams to provide ocean wave spectrum data using only single polarisation (HH or VV). Incidence angles range from 23° to 36.5°.
 
@@ -119,7 +119,7 @@ Additionally, IW mode is tailored to support coherent radar change detection and
 
 Synthetic Aperture Radar (SAR) imaging onboard Sentinel-1 supports multiple polarisation modes, allowing the radar to transmit and receive signals in both vertical and horizontal orientations. These configurations include \textbf{VV}, \textbf{VH}, \textbf{HH}, and \textbf{HV}. In the Interferometric Wide (IW) swath mode, Sentinel-1 satellites primarily offer the \textbf{VV} and \textbf{VH} dual-polarisation configuration. Each polarisation setup exhibits unique imaging behaviors depending on the physical properties of the Earth's surface.
 
-\subsubsection{\textbf{VV Polarisation (Vertical transmit – Vertical receive):}}
+\subsubsection{\textbf{1. VV Polarisation (Vertical transmit – Vertical receive):}}
 
 In this configuration, the radar pulses are emitted with a vertical orientation and the sensor records vertically polarised echoes. This mode is particularly effective at capturing reflections from flat surfaces or structures with strong angular edges, such as urban environments. The double-bounce effect between ground and building walls often enhances the backscattering response in VV mode. Additionally, open terrain and bare soil produce strong surface scattering under this setup.
 
@@ -137,7 +137,7 @@ In this configuration, the radar pulses are emitted with a vertical orientation 
     \item Less sensitive to canopy and biomass density compared to cross-pol modes.
 \end{itemize}
 
-\subsubsection{\textbf{VH Polarisation (Vertical transmit – Horizontal receive):}}
+\subsubsection{\textbf{2. VH Polarisation (Vertical transmit – Horizontal receive):}}
 
 This configuration involves the transmission of vertically polarised waves and reception of horizontally polarised ones. VH is a cross-polarisation mode that captures volume scattering effectively. It is more responsive to randomly oriented scatterers, such as leaves, branches, or forest canopies, making it useful for distinguishing vegetated regions.
 
@@ -154,7 +154,7 @@ This configuration involves the transmission of vertically polarised waves and r
     \item Lower signal-to-noise ratio in comparison to co-polarisation.
 \end{itemize}
 
-\subsubsection{\textbf{HH Polarisation (Horizontal transmit – Horizontal receive):}}
+\subsubsection{\textbf{3. HH Polarisation (Horizontal transmit – Horizontal receive):}}
 
 In this co-polarisation mode, the system transmits and receives radar signals in the horizontal direction. Though not supported in IW mode of Sentinel-1, this mode has demonstrated utility in sea-ice monitoring and agricultural applications in other SAR missions.
 
@@ -171,7 +171,7 @@ In this co-polarisation mode, the system transmits and receives radar signals in
     \item Offers limited benefit for land use classification compared to VV/VH.
 \end{itemize}
 
-\subsubsection{\textbf{HV Polarisation (Horizontal transmit – Vertical receive):}}
+\subsubsection{\textbf{4. HV Polarisation (Horizontal transmit – Vertical receive):}}
 
 Similar to VH, this cross-polarised mode is not enabled in IW acquisitions for Sentinel-1. However, in missions that do offer it, HV behaves similarly to VH, revealing internal vegetation structures and terrain volume complexity.
 
@@ -195,7 +195,9 @@ Given the operational limitations and application scope, the dual-polarisation c
 
 \subsection{Resolution Scale}
 
-10m
+
+The resolution scale used for the Sentinel images in this project is set to 10 meters. This spatial resolution implies that each pixel in the image represents an area of 10 meters by 10 meters on the ground. Such a resolution offers a balanced trade-off between detail and data size, making it particularly suitable for medium-scale environmental monitoring and urban land cover analysis. At this scale, significant surface features such as roads, agricultural plots, and large buildings become discernible, allowing the model to learn meaningful spatial patterns during training. Moreover, maintaining a uniform resolution across both Sentinel-1 (SAR) and Sentinel-2 (optical) images ensures consistent spatial alignment, which is critical for the accurate colorisation of SAR data using the paired optical imagery.
+
 
 \subsection{Season Classification}
 
