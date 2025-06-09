@@ -31,13 +31,168 @@ These were all the metadata associated with the images in the dataset. This info
 
 Now, that the metadata keys have been decided, we need to select appropriate values for them. Once the values are decided, they can be used to acquire images from the ESA's Copernicus API.
 
-\subsection{Satellite operational mode}
+\subsection{\textbf{Satellite operational mode}}
 
-Sen 1 IW
 
-\subsection{Polarization}
+Sentinel‑1A and Sentinel‑1B operate using four exclusive acquisition modes: \textbf{Stripmap (SM)}, \textbf{Interferometric Wide Swath (IW)}, \textbf{Extra Wide Swath (EW)}, and \textbf{Wave (WV)}. These modes utilize the satellite’s C-SAR instrument and vary in swath width, resolution, and application.\cite{eos2024sentinel1}
 
-VV VH
+\subsubsection{Stripmap (SM) Mode:}
+
+SM mode ensures compatibility with earlier missions like ERS and Envisat. It offers high-resolution (5 x 5 m) imaging with a swath width of 80 km. The mode uses six overlapping swaths, each controlled by fixed azimuth and elevation pointing. Users can switch among beams by adjusting incidence angles and elevation beam width.
+
+
+\textbf{Advantages:}
+\begin{itemize}
+    \item High geometric resolution suitable for detailed studies.
+    \item Effective ambiguity suppression via beamforming.
+\end{itemize}
+
+\textbf{Disadvantages:}
+\begin{itemize}
+    \item Limited swath width.
+    \item Not ideal for continuous land monitoring or large-area coverage.
+\end{itemize}
+
+\subsubsection{\textbf{Interferometric Wide Swath (IW) Mode:}}
+
+IW mode is the primary mode for land observation. It combines a 250 km swath width with 5 x 20 m resolution and implements the TOPS (Terrain Observation with Progressive Scans) technique, which enhances uniformity across images.
+
+TOPSAR reduces the azimuth antenna pattern footprint by steering it opposite to the satellite’s motion. This achieves uniform Signal-to-Noise Ratio (SNR) and Distributed Target Ambiguity Ratio (DTAR), maintaining consistent image quality.
+
+The IW mode also supports burst synchronization for interferometric applications. With Doppler and wave number spectrum overlaps, it ensures image homogeneity and phase coherence.
+
+
+\textbf{Advantages:}
+\begin{itemize}
+    \item Balanced resolution and coverage (250 km swath).
+    \item TOPSAR technique minimizes scalloping and distortion.
+    \item Ideal for change detection and land deformation analysis.
+\end{itemize}
+
+\textbf{Disadvantages:}
+\begin{itemize}
+    \item Slightly lower resolution than SM mode.
+    \item Requires high co-registration precision for interferometry.
+\end{itemize}
+
+\subsubsection{\textbf{Extra Wide Swath (EW) Mode:} }
+
+EW mode employs the same TOPSAR principle as IW but extends the swath to 400 km using five sub-swaths. It provides a coarser resolution of 20 x 40 m and is primarily used over oceans and polar regions where spatial coverage outweighs detail.
+
+
+\textbf{Advantages:}
+\begin{itemize}
+    \item Covers vast areas quickly.
+    \item Suited for sea ice and maritime surveillance.
+\end{itemize}
+
+\textbf{Disadvantages:}
+\begin{itemize}
+    \item Low resolution unsuitable for terrestrial or fine-grained applications.
+\end{itemize}
+
+\subsubsection{\textbf{Wave (WV) Mode: }}
+
+WV mode offers 20 × 20 km vignettes captured at intervals of 100 km along the satellite's path. It alternates elevation beams to provide ocean wave spectrum data using only single polarisation (HH or VV). Incidence angles range from 23° to 36.5°.
+
+
+\textbf{Advantages:}
+\begin{itemize}
+    \item Specialized for ocean wave analysis.
+    \item Provides long-duration oceanic data per orbit.
+\end{itemize}
+
+\textbf{Disadvantages:}
+\begin{itemize}
+    \item Inapplicable for land-based mapping.
+    \item Produces small, isolated vignettes rather than continuous scenes.
+\end{itemize}
+
+\subsubsection{\textbf{Why IW Mode is Chosen: }}
+
+The \textbf{Interferometric Wide Swath (IW) mode} stands out as the most suitable acquisition mode for land-focused applications such as SAR image colorization. Unlike the high-resolution but narrow-view SM mode, or the ultra-wide but low-resolution EW mode, IW mode achieves an optimal trade-off between spatial detail and areal coverage. Its use of the TOPSAR scanning technique results in uniform signal and image quality across the entire swath, crucial for generating high-fidelity datasets needed in downstream image translation or enhancement tasks.
+
+Additionally, IW mode is tailored to support coherent radar change detection and interferometry by ensuring spectral overlap and burst synchronization. These capabilities are vital when aligning SAR images with optical references like Sentinel‑2, as they maintain geometric consistency and temporal coherence. Therefore, considering both technical robustness and operational balance, IW mode is best suited for acquiring Sentinel-1 data for land monitoring and image enhancement tasks.
+
+
+
+\subsection{Polarisation Modes in Sentinel-1 IW Imagery}
+
+Synthetic Aperture Radar (SAR) imaging onboard Sentinel-1 supports multiple polarisation modes, allowing the radar to transmit and receive signals in both vertical and horizontal orientations. These configurations include \textbf{VV}, \textbf{VH}, \textbf{HH}, and \textbf{HV}. In the Interferometric Wide (IW) swath mode, Sentinel-1 satellites primarily offer the \textbf{VV} and \textbf{VH} dual-polarisation configuration. Each polarisation setup exhibits unique imaging behaviors depending on the physical properties of the Earth's surface.
+
+\subsubsection{\textbf{VV Polarisation (Vertical transmit – Vertical receive):}}
+
+In this configuration, the radar pulses are emitted with a vertical orientation and the sensor records vertically polarised echoes. This mode is particularly effective at capturing reflections from flat surfaces or structures with strong angular edges, such as urban environments. The double-bounce effect between ground and building walls often enhances the backscattering response in VV mode. Additionally, open terrain and bare soil produce strong surface scattering under this setup.
+
+
+\textit{Advantages:}
+\begin{itemize}
+    \item Produces strong backscatter in man-made environments and smooth terrains.
+    \item Excellent for distinguishing water bodies due to their specular reflection producing low return (dark pixels).
+    \item Relatively noise-resilient and more consistent across different land surfaces.
+\end{itemize}
+
+\textit{Disadvantages:}
+\begin{itemize}
+    \item Struggles to capture volume scattering features such as dense vegetation.
+    \item Less sensitive to canopy and biomass density compared to cross-pol modes.
+\end{itemize}
+
+\subsubsection{\textbf{VH Polarisation (Vertical transmit – Horizontal receive):}}
+
+This configuration involves the transmission of vertically polarised waves and reception of horizontally polarised ones. VH is a cross-polarisation mode that captures volume scattering effectively. It is more responsive to randomly oriented scatterers, such as leaves, branches, or forest canopies, making it useful for distinguishing vegetated regions.
+
+
+\textit{Advantages:}
+\begin{itemize}
+    \item Highly sensitive to vegetation structure and density.
+    \item Improves discrimination between built-up areas and natural surfaces when used alongside VV in dual-pol mode.
+\end{itemize}
+
+\textit{Disadvantages:}
+\begin{itemize}
+    \item Yields weaker returns from surfaces with minimal volumetric complexity (e.g., bare soil, urban surfaces).
+    \item Lower signal-to-noise ratio in comparison to co-polarisation.
+\end{itemize}
+
+\subsubsection{\textbf{HH Polarisation (Horizontal transmit – Horizontal receive):}}
+
+In this co-polarisation mode, the system transmits and receives radar signals in the horizontal direction. Though not supported in IW mode of Sentinel-1, this mode has demonstrated utility in sea-ice monitoring and agricultural applications in other SAR missions.
+
+
+\textit{Advantages:}
+\begin{itemize}
+    \item Effective for ocean surface observations under specific environmental conditions.
+    \item Can highlight rougher surface scattering on water or snow.
+\end{itemize}
+
+\textit{Disadvantages:}
+\begin{itemize}
+    \item Not supported in IW mode of Sentinel-1.
+    \item Offers limited benefit for land use classification compared to VV/VH.
+\end{itemize}
+
+\subsubsection{\textbf{HV Polarisation (Horizontal transmit – Vertical receive):}}
+
+Similar to VH, this cross-polarised mode is not enabled in IW acquisitions for Sentinel-1. However, in missions that do offer it, HV behaves similarly to VH, revealing internal vegetation structures and terrain volume complexity.
+
+
+\textit{Advantages:}
+\begin{itemize}
+    \item Useful in forestry studies for identifying canopy features and forest degradation.
+\end{itemize}
+
+\textit{Disadvantages:}
+\begin{itemize}
+    \item Not available in Sentinel-1 IW mode.
+    \item Lower signal strength compared to co-polar modes.
+\end{itemize}
+
+\subsubsection{\textbf{Why VV + VH polarization mode ?}}
+
+Given the operational limitations and application scope, the dual-polarisation configuration of \textbf{VV + VH} stands out as the most balanced and informative mode for Sentinel-1 IW data. VV enables clear imaging of built-up surfaces, bare land, and water bodies, while VH supplements this by providing crucial information on vegetative structures. Together, they offer complementary insights across a range of land cover types, making this dual-pol setup optimal for most earth observation and land use applications where SAR imaging is applied.
+
+
 
 \subsection{Resolution Scale}
 

@@ -80,7 +80,40 @@ Hence, Latent Diffusion Model is the most suitable and appropriate choice for ou
 
 \subsection{VAE}
 
-Variational Auto Encoder
+\subsubsection{What is a Variational Autoencoder (VAE)?}
+A Variational Autoencoder, or VAE, is a type of generative model that learns both how to represent data in a compressed form (encoding) and how to reconstruct data from that compressed form (decoding). Unlike traditional autoencoders, VAEs introduce a probabilistic element, allowing them to learn meaningful latent representations of data. This makes them useful for tasks like image generation, representation learning, and semi-supervised learning.
+
+\subsubsection{Architecture and Working Mechanism}
+VAEs consist of two major parts:
+\begin{itemize}
+    \item \textbf{Encoder (Inference Model):} Transforms input data into a lower-dimensional latent space, where each data point is represented as a probability distribution rather than a single point. This is typically modeled using a neural network that outputs the parameters of a Gaussian distribution (mean and variance).
+    \item \textbf{Decoder (Generative Model):} Reconstructs the original data from a sample drawn from the latent distribution. This helps the model generate new data that resembles the input space.
+\end{itemize}
+
+To make learning efficient, VAEs use a technique called the \textit{reparameterization trick} \cite{Kingma_2019}, which enables gradients to flow through stochastic nodes during backpropagation. This trick transforms the sampling operation into a deterministic function plus random noise, making it compatible with gradient-based optimization methods.
+
+\subsubsection{Optimization: The ELBO}
+The VAE does not optimize the likelihood of the data directly. Instead, it uses a surrogate objective called the Evidence Lower Bound (ELBO), which balances two terms:
+\begin{itemize}
+    \item A reconstruction term, which ensures the decoded output is similar to the input.
+    \item A regularization term (KL divergence), which ensures the learned latent space follows a standard normal distribution.
+\end{itemize}
+Maximizing the ELBO allows the model to learn both how to compress data and how to generate new samples effectively.
+
+\subsubsection{Features and Capabilities}
+\begin{itemize}
+    \item \textbf{Latent Space Modeling:} Learns structured and interpretable latent variables.
+    \item \textbf{Generative Abilities:} Can create new samples by drawing from the latent distribution.
+    \item \textbf{Amortized Inference:} The encoder is shared across all inputs, making inference faster and more scalable.
+    \item \textbf{Smooth Interpolations:} Because of the probabilistic nature of the latent space, interpolating between two points results in smooth transitions in the generated output.
+\end{itemize}
+
+\subsubsection{Comparison with Other Models}
+Unlike GANs, which focus on generating sharp, realistic outputs without explicitly modeling the data distribution, VAEs aim to model the full data distribution and offer better control and interpretability over the latent space. While they sometimes produce blurrier outputs, VAEs excel at representing uncertainty and allow easy sampling, interpolation, and conditional generation.
+
+\subsubsection{Why Use VAE?}
+In our SAR image colorization setup, we need a system that can handle paired grayscale and color images and learn to represent their relationship in a structured way. The VAE’s probabilistic framework and ability to model high-dimensional distributions through a compressed latent space make it a strong candidate for this task \cite{Kingma_2019}. Its compatibility with other components like UNET (as a decoder) and CLIP (for prompt-based conditioning) makes it especially suitable for our multimodal image-to-image translation pipeline.
+
 
 \subsection{CLIP}
 
@@ -119,7 +152,36 @@ In SAR image colorization, where we take black-and-white satellite images as inp
 
 \subsection{UNET}
 
-UNET
+\subsubsection{What is UNET?}
+UNET is a type of convolutional neural network developed specifically for image segmentation tasks in the biomedical field. It was designed to deliver high accuracy using only a small amount of labeled data. The model's structure forms a distinctive U-shape, which allows it to combine detailed spatial information with broader contextual features. This makes UNET especially effective for applications where both fine detail and global structure are important.
+
+\subsubsection{Architecture}
+The network has two main sections:
+\begin{itemize}
+    \item \textbf{Contracting Path:} This section works like a typical convolutional neural network. It repeatedly applies small filters and pooling to reduce the size of the feature maps while increasing the number of channels. This helps the network capture more abstract features as the image size shrinks.
+    \item \textbf{Expanding Path:} In this phase, the network gradually increases the resolution by upsampling. It also connects features from earlier layers in the contracting path, allowing the model to recover fine spatial details lost during downsampling.
+\end{itemize}
+This U-shaped design enables the model to consider both local and global image contexts, producing accurate segmentations.\cite{ronneberger2015unetconvolutionalnetworksbiomedical}
+
+\subsubsection{Working Mechanism}
+UNET works by classifying each pixel in an image. It uses a softmax function \cite{ronneberger2015unetconvolutionalnetworksbiomedical} to assign probabilities to different classes, and a loss function that compares the predictions to the true pixel labels. To handle imbalanced data and emphasize important regions (such as boundaries between objects), the loss function includes a weight map.
+
+Additionally, the model uses a technique called \textit{overlap-tile strategy} to process large images. When the input image exceeds the model's capacity, it's divided into overlapping tiles. Border areas are filled using mirroring to ensure smooth predictions at the edges.
+
+\subsubsection{Features and Capabilities}
+\begin{itemize}
+    \item \textbf{Detailed segmentation:} It accurately labels each pixel by combining low- and high-level image features.
+    \item \textbf{Efficient with small datasets:} The model can be trained with limited annotated data using extensive data augmentation, such as elastic distortions.
+    \item \textbf{Quick and scalable:} It can process standard-size images (e.g., 512×512 pixels) in under a second on modern hardware.
+    \item \textbf{Adaptable to large images:} Through the overlap-tile strategy, it can handle inputs of any size.
+\end{itemize}
+
+\subsubsection{Comparison with Other Models}
+Unlike earlier models that slide a window over the image to make predictions, UNET processes the full image at once. This speeds up prediction and improves accuracy by avoiding redundant computations. Compared to simpler CNNs, UNET’s skip connections help preserve fine image details that are often lost in deeper networks.
+
+\subsubsection{Why Use UNET?}
+UNET is a solid choice for tasks that require high-resolution outputs, especially where detailed structure needs to be preserved—such as in SAR image colorization. Its ability to work well with limited training data and retain intricate features in the output makes it a reliable component when paired with models like Latent Diffusion.In our project, UNET plays a vital role in the decoder part of the pipeline, helping generate precise, realistic colorizations from SAR grayscale images.
+
 
 \section{Training}
 
