@@ -125,12 +125,12 @@ The Sentinel-1 eval script is as follows:
     function setup() {
         return {
             input: ["VV"],
-            output: { bands: 1 }
+            output: { id: "default", bands: 1 }
         };
     }
 
     function evaluatePixel(sample) {
-        return [sample.VV];
+        return [2 * sample.VV];
     }
 \end{lstlisting}
 
@@ -168,7 +168,7 @@ Once the images are cropped and divided into smaller images, one last manual ins
 
 \subsection{Pre-Processing}
 
-Now, we have arrived at one of the most important steps in dataset preparation. Pre-processing of the images in the dataset. Right from the beginning, there are two issues that remote sensing images face, namely, \textbf{Geometric Distortions due to tilt} and \textbf{Speckle noise}. To fix these issues we tackle them in the following ways:
+Now, we have arrived at one of the most important steps in dataset preparation. Pre-processing of the images in the dataset. Right from the beginning, there are two issues that remote sensing images face, namely, \textbf{Geometric Distortions due to tilt} and \textbf{Speckle noise}. The fixes for this are applied ath the sentinel hub by mentioning these fixes in the request body (See appendix \ref{code:sen1req}). To fix these issues we tackle them in the following ways:
 
 \subsubsection{Orthorectification}
 
@@ -182,8 +182,27 @@ To accurately remove the image distortions, a digital elevation model (DEM) is u
 
 When a radar illuminates a surface that is rough on the scale of radar wavelength, the return signal consists of waves reflected from many elementary scatterers within a resolution cell. The distances between the elementary scatterers and the receiver vary due to the surface roughness, and, therefore, the receieved waves, although coherent in frequency, are no longer coherent in phase. A strong signal is received, if the waves add relatively constructively; a weak signal, ifthe waves are out of phase. A SAR image is formed by coherently processing the returns from successive radar pulses. This eddect causes a pixel to pixel variation in intensity, and this variation manifests itself as a granular pattern, called speckle\cite{SpeckleLee}.
 
-To filter out speckles, we use Lee method of speckle filtering. It employs a sample mean and variance of of pixels in scanning window going over the image.
+To filter out speckles, we use Lee method of speckle filtering. It employs a sample mean and variance of pixels in scanning window going over the image.
 
 \subsection{Organizing and Dataset Structure}
 
-folders
+After acquiring all the images and processing them, they are segregated into folders based on their initial location or region. Each region folder has two subfolders that store the Sentinel 1 images and Sentinel 2 images. The root of the dataset folder also has CSV files corresponding to each region which holds the metadata for all image pairs within a given region.
+
+Our dataset has images spread uniformly across all over the world with 165 regions and 129,438 pairs of images. Thus the total number of image files in the dataset amounts to 258,876 images. An overview of the selected regions given on the worldmap is given in Fig \ref{fig:map}
+
+\begin{figure*}
+    \includegraphics[width=\textwidth]{region_plot.png}
+    \caption{All regions from where data has been included in the dataset}
+    \label{fig:map}
+\end{figure*}
+
+A sample showcase of images from the dataset can also be seen in Fig \ref{fig:showcase}
+
+\begin{figure*}
+    \includegraphics[width=\textwidth]{showCase.png}
+    \caption{Sample images from the dataset. Top row: Sentinel-1 images, bottom row: corresponding Sentinel-2 images}
+    \label{fig:showcase}
+\end{figure*}
+
+\subsection{Dataset availability}
+The \textit{Uniform Sen 1-2} dataset is shared under the open access license CC-BY-SA 4.0 and is available to download at kaggle. The dataset can be accessed at \url{https://www.kaggle.com/datasets/shambac/uniform-sen-1-2-dataset}. As an when a DOI is generated for the dataset, the paper will be updated to reflect the same.

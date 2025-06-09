@@ -30,3 +30,49 @@ All major code snippets can be found here.
     all_countries_df = pd.concat(country_dfs)
     all_countries_df.to_parquet(output_path, index=False)    
 \end{lstlisting}\label{code:season}
+
+\begin{lstlisting}[language=Python, caption={Request body for sentinel 1 images}]
+    request = {
+        "input": {
+            "bounds": {
+                "bbox": bbox,
+                "properties": { "crs": "http://www.opengis.net/def/crs/EPSG/0/4326" }
+            },
+            "data": [
+                {
+                    "dataFilter": {
+                        "timerange": {
+                            "from": fromDateTime,
+                            "to": toDateTime
+                        },
+                        "resolution": "HIGH",
+                        "acquisitionMode": "IW"
+                    },
+                    "processing": {
+                        "orthorectify": "true",
+                        "demInstance": "COPERNICUS_30",
+                        "speckleFilter": {
+                            "type": "LEE",
+                            "windowSizeX": 5,
+                            "windowSizeY": 5
+                        }
+                    },
+                    "type": "sentinel-1-grd",
+                }
+            ]
+        },
+        "output": {
+            "width": img_width,
+            "height": img_height,
+            "responses": [
+                {
+                    "identifier": "default",
+                    "format": {
+                        "type": "image/png"
+                    }
+                }
+            ]
+        },
+        "evalscript": evalScript
+    }
+\end{lstlisting}\label{code:sen1req}
