@@ -273,20 +273,6 @@ $\uparrow$ \\
     \end{itemize}
 \end{enumerate}
 
-\textbf{Diffusion Process}:
-
-Forward process (noise addition):
-\begin{equation}
-q(x_t|x_{t-1}) = \mathcal{N}(x_t; \sqrt{1-\beta_t}x_{t-1}, \beta_t I)
-\end{equation}
-
-Reverse process (denoising):
-\begin{equation}
-p_\theta(x_{t-1}|x_t, c) = \mathcal{N}(x_{t-1}; \mu_\theta(x_t, t, c), \Sigma_\theta(x_t, t, c))
-\end{equation}
-
-Where $c$ represents the conditioning information (SAR image + text).
-
 \section{Training Methodology}
 
 \subsection{Two-Stage Training Protocol}
@@ -325,16 +311,11 @@ Where $c$ represents the conditioning information (SAR image + text).
 
 \textbf{Training Process}:
 \begin{enumerate}
-    \item \textbf{Latent Encoding}: Optical images encoded to latents using trained VQ-VAE
+    \item \textbf{Latent Encoding}: Optical images encoded to latents using trained VAE
     \item \textbf{Noise Addition}: Random timestep $t$ sampled, noise added to latents
     \item \textbf{Conditional Prediction}: U-Net predicts noise given noisy latents and conditions
     \item \textbf{Loss Computation}: MSE between predicted and actual noise
 \end{enumerate}
-
-\textbf{Noise Prediction Objective}:
-\begin{equation}
-\mathcal{L}_{diffusion} = \mathbb{E}_{t,\epsilon \sim \mathcal{N}(0,I),c} \left[ \|\epsilon - \epsilon_\theta(\sqrt{\bar{\alpha}_t}x_0 + \sqrt{1-\bar{\alpha}_t}\epsilon, t, c)\|^2 \right]
-\end{equation}
 
 \subsection{Data Configuration}
 
