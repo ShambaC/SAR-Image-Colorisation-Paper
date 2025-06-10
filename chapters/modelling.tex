@@ -196,6 +196,191 @@ Unlike earlier models that slide a window over the image to make predictions, UN
 UNET is a solid choice for tasks that require high-resolution outputs, especially where detailed structure needs to be preserved—such as in SAR image colorization. Its ability to work well with limited training data and retain intricate features in the output makes it a reliable component when paired with models like Latent Diffusion.In our project, UNET plays a vital role in the decoder part of the pipeline, helping generate precise, realistic colorizations from SAR grayscale images.
 
 
-\section{Training}
+\section{Architecture Overview}
 
-Model training
+Our approach utilizes a two-stage generative model for SAR to optical image translation:
+
+\begin{enumerate}
+    \item \textbf{Stage 1}: Variational Autoencoder (VAE) learns a compact latent representation of optical images
+    \item \textbf{Stage 2}: Conditional diffusion model generates optical latents from SAR inputs with text guidance
+\end{enumerate}
+
+\subsection{System Architecture}
+
+The overall system architecture can be visualized as follows:
+
+\begin{center}
+\texttt{SAR Image (256×256×3)} $\rightarrow$ \\
+\texttt{VAE Encoder} $\rightarrow$ \texttt{Latents (64×64×4)} $\rightarrow$ \\
+\texttt{U-Net} $\rightarrow$ \texttt{Enhanced Latents (64×64×4)} $\rightarrow$ \\
+\texttt{VAE Decoder} $\rightarrow$ \texttt{Optical Image (256×256×3)} \\
+$\uparrow$ \\
+\texttt{Text Prompt}
+\end{center}
+
+\subsection{Model Components}
+
+\subsubsection{Variational Autoencoder (VAE)}
+
+\textbf{Purpose}: Learns a discrete latent representation space for optical images.
+
+\textbf{Architecture Components}:
+
+\textbf{Encoder}:
+\begin{itemize}
+    \item Input: RGB optical images (256×256×3)
+    \item Convolutional layers with progressive downsampling
+    \item Down channels: [64, 128, 256, 256]
+    \item Downsampling stages: 3 (256→128→64→32, then upsampled to 64×64)
+    \item Output: Continuous latents (64×64×4)
+\end{itemize}
+
+\textbf{Decoder}:
+\begin{itemize}
+    \item Input: Quantized latents (64×64×4)
+    \item Progressive upsampling to original resolution
+    \item Output: Reconstructed RGB images (256×256×3)
+\end{itemize}
+
+\subsubsection{U-Net Diffusion Model}
+
+\textbf{Purpose}: Generates optical image latents conditioned on SAR images and text prompts using denoising diffusion.
+
+\textbf{Architecture Specifications}:
+\begin{itemize}
+    \item \textbf{Backbone}: U-Net with skip connections
+    \item \textbf{Down channels}: [256, 384, 512, 768]
+    \item \textbf{Mid channels}: [768, 512]
+    \item \textbf{Attention mechanisms}: Multi-head self-attention at each resolution level
+\end{itemize}
+
+\textbf{Conditioning Mechanisms}:
+
+\begin{enumerate}
+    \item \textbf{SAR Image Conditioning}:
+    \begin{itemize}
+        \item Direct spatial feature concatenation
+        \item Cross-attention integration in U-Net blocks
+        \item Dropout probability: 5\% (for classifier-free guidance)
+    \end{itemize}
+    
+    \item \textbf{Text Conditioning}:
+    \begin{itemize}
+        \item CLIP text encoder
+        \item Embedding dimension: 512
+        \item Cross-attention integration
+        \item Dropout probability: 10\% (for classifier-free guidance)
+    \end{itemize}
+\end{enumerate}
+
+\textbf{Diffusion Process}:
+
+Forward process (noise addition):
+\begin{equation}
+q(x_t|x_{t-1}) = \mathcal{N}(x_t; \sqrt{1-\beta_t}x_{t-1}, \beta_t I)
+\end{equation}
+
+Reverse process (denoising):
+\begin{equation}
+p_\theta(x_{t-1}|x_t, c) = \mathcal{N}(x_{t-1}; \mu_\theta(x_t, t, c), \Sigma_\theta(x_t, t, c))
+\end{equation}
+
+Where $c$ represents the conditioning information (SAR image + text).
+
+\section{Training Methodology}
+
+\subsection{Two-Stage Training Protocol}
+
+\subsubsection{Stage 1: VAE Training}
+
+\textbf{Dataset}: Optical images from Sentinel-2 satellite data
+
+\textbf{Training Configuration}:
+\begin{itemize}
+    \item Epochs: 25
+    \item Batch size: 8
+    \item Learning rate: $1 \times 10^{-5}$
+    \item Optimizer: Adam
+    \item Gradient accumulation: 4 steps
+\end{itemize}
+
+\textbf{Loss Function}:
+\begin{equation}
+\mathcal{L}_{total} = \mathcal{L}_{MSE} + \mathcal{L}_{codebook} + 0.2 \times \mathcal{L}_{commitment} + 0.5 \times \mathcal{L}_{adversarial}
+\end{equation}
+
+\subsubsection{Stage 2: Latent Diffusion Model Training}
+
+\textbf{Dataset}: SAR-optical image pairs with text descriptions
+
+\textbf{Training Configuration}:
+\begin{itemize}
+    \item Epochs: 60
+    \item Batch size: 16
+    \item Learning rate: $1 \times 10^{-4}$
+    \item Optimizer: Adam
+    \item Diffusion timesteps: 1,000
+    \item Beta schedule: Linear (0.00085 → 0.012)
+\end{itemize}
+
+\textbf{Training Process}:
+\begin{enumerate}
+    \item \textbf{Latent Encoding}: Optical images encoded to latents using trained VQ-VAE
+    \item \textbf{Noise Addition}: Random timestep $t$ sampled, noise added to latents
+    \item \textbf{Conditional Prediction}: U-Net predicts noise given noisy latents and conditions
+    \item \textbf{Loss Computation}: MSE between predicted and actual noise
+\end{enumerate}
+
+\textbf{Noise Prediction Objective}:
+\begin{equation}
+\mathcal{L}_{diffusion} = \mathbb{E}_{t,\epsilon \sim \mathcal{N}(0,I),c} \left[ \|\epsilon - \epsilon_\theta(\sqrt{\bar{\alpha}_t}x_0 + \sqrt{1-\bar{\alpha}_t}\epsilon, t, c)\|^2 \right]
+\end{equation}
+
+\subsection{Data Configuration}
+
+\textbf{Dataset Splits}:
+\begin{itemize}
+    \item Training: 70\%
+    \item Validation: 15\%
+    \item Testing: 15\%
+\end{itemize}
+
+\textbf{Data Augmentation}:
+\begin{itemize}
+    \item Geometric transformations (rotation, flipping)
+    \item Color jittering for optical images
+\end{itemize}
+
+\textbf{Text Prompt Format}:
+\begin{center}
+\texttt{"Colorise image, Region: \{region\}, Season: \{season\}"}
+\end{center}
+
+Where:
+\begin{itemize}
+    \item \texttt{region}: \{tropical, temperate, arctic\}
+    \item \texttt{season}: \{spring, summer, autumn, winter\}
+\end{itemize}
+
+\subsection{Implementation Details}
+
+\textbf{Hardware Requirements}:
+\begin{itemize}
+    \item GPU: NVIDIA H200 140GB (104 GB in use during training)
+    \item RAM: 50 GB
+    \item Storage: 50GB
+\end{itemize}
+
+\textbf{Training Performance}:
+\begin{itemize}
+    \item VAE training time: 10 minutes per epoch
+    \item LDM training time: 6 minutes per epoch
+    \item Total training time: 13 hours
+\end{itemize}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{loss_curve.png}
+    \caption{Training loss curves for both VAE and LDM training stages}
+    \label{fig:loss_curve}
+\end{figure}
